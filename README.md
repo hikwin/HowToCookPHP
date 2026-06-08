@@ -2,6 +2,14 @@
 
 这是一个基于 PHP + SQLite3 开发的 **HowToCook** 菜谱浏览器，提供了优雅的网页版界面、强大的查询工具以及全套的用户功能。
 
+## 📸 界面预览
+
+### 首页 (Homepage)
+![首页](./screenshots/home.png)
+
+### 菜谱浏览页 (Browse Recipes)
+![菜谱浏览](./screenshots/browse.png)
+
 ---
 
 ## ✨ 主要功能
