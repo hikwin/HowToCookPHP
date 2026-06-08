@@ -40,31 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         flash('success', '设置已保存');
         header('Location: ' . base_url('admin'));
         exit;
-    } elseif ($action === 'admin_credentials') {
-        $adm_email = trim($_POST['default_admin_email'] ?? '');
-        $adm_name  = trim($_POST['default_admin_name'] ?? '');
-        $adm_pass  = $_POST['default_admin_pass'] ?? '';
-        $adm_pass2 = $_POST['default_admin_pass2'] ?? '';
-        $cred_errors = [];
-        if ($adm_email && !filter_var($adm_email, FILTER_VALIDATE_EMAIL)) {
-            $cred_errors[] = '邮箱格式不正确';
-        }
-        if ($adm_pass && $adm_pass !== $adm_pass2) {
-            $cred_errors[] = '两次密码不一致';
-        }
-        if ($adm_pass && strlen($adm_pass) < 8) {
-            $cred_errors[] = '默认密码至少 8 位';
-        }
-        if (empty($cred_errors)) {
-            if ($adm_email) set_setting('default_admin_email', $adm_email);
-            if ($adm_name)  set_setting('default_admin_name', $adm_name);
-            if ($adm_pass)  set_setting('default_admin_pass', $adm_pass);
-            flash('success', '默认管理员配置已更新（下次初始化数据库时生效）');
-            header('Location: ' . base_url('admin'));
-            exit;
-        }
-        // Fall through to render with errors
-        $admin_cred_errors = $cred_errors;
     }
 }
 
@@ -80,10 +55,7 @@ $site_name   = get_setting('site_name', 'HowToCook');
 $repo_url    = get_setting('repo_url', 'https://github.com/Anduin2017/HowToCook.git');
 $repo_backup = get_setting('repo_backup_url', 'https://gitee.com/Anduin2017/HowToCook.git');
 
-// Default admin credentials (for initial seed)
-$default_admin_email = get_setting('default_admin_email', 'admin@default.com');
-$default_admin_name  = get_setting('default_admin_name', 'Admin');
-$admin_cred_errors   = $admin_cred_errors ?? [];
+
 
 ob_start();
 ?>
@@ -151,6 +123,19 @@ ob_start();
                     </div>
                 </div>
             </div>
+
+            <!-- Support / GitHub Star Card -->
+            <div class="card shadow-sm border-0 rounded-4 mt-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-semibold mb-2">⭐ 支持本项目</h5>
+                    <p class="text-muted small mb-3">
+                        如果你觉得本项目对你有帮助，请给个 Star 支持一下！你的支持是作者持续维护的最大动力 💖
+                    </p>
+                    <a href="https://github.com/hikwin/HowToCookPHP" target="_blank" class="btn btn-outline-primary fw-semibold d-inline-flex align-items-center gap-2">
+                        <span>⭐ 前往 GitHub 点个 Star</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- Settings -->
@@ -185,53 +170,6 @@ ob_start();
         </div>
     </div>
 
-    <!-- Default Admin Credentials -->
-    <div class="row g-4 mt-1">
-        <div class="col-12">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4">
-                    <h5 class="fw-semibold mb-1">🔑 默认管理员账户配置</h5>
-                    <p class="text-muted small mb-3">
-                        这是系统初始化时自动创建的管理员账户信息。修改后，下次数据库重置时将使用新配置。
-                        <strong>当前已注册用户的权限不受影响。</strong>
-                        如需修改当前管理员邮箱/密码，请在 <a href="<?= e(base_url('profile')) ?>">个人设置</a> 中操作。
-                    </p>
-                    <?php foreach ($admin_cred_errors as $ce): ?>
-                    <div class="alert alert-danger"><?= e($ce) ?></div>
-                    <?php endforeach; ?>
-                    <form method="post" class="row g-3">
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="action" value="admin_credentials">
-                        <div class="col-md-4">
-                            <label class="form-label">默认管理员邮箱</label>
-                            <input type="email" name="default_admin_email" class="form-control"
-                                   value="<?= e($default_admin_email) ?>" maxlength="254"
-                                   placeholder="admin@example.com">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">默认管理员昵称</label>
-                            <input type="text" name="default_admin_name" class="form-control"
-                                   value="<?= e($default_admin_name) ?>" maxlength="30"
-                                   placeholder="Admin">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">默认管理员密码（留空保持不变）</label>
-                            <input type="password" name="default_admin_pass" class="form-control"
-                                   maxlength="256" placeholder="不填则保持原密码">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">确认默认密码</label>
-                            <input type="password" name="default_admin_pass2" class="form-control"
-                                   maxlength="256" placeholder="再次输入新密码">
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-outline-danger">更新默认管理员配置</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 <?php
 $content    = ob_get_clean();
