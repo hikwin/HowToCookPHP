@@ -1,0 +1,18 @@
+# .htaccess for HowToCookViewer PHP Edition
+# Rewrites all non-file requests to public/index.php
+
+Options -Indexes
+
+# Access to data directory is denied directly via data/.htaccess
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Skip actual files (CSS, JS, images, etc.)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Route everything through the public directory
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>

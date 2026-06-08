@@ -1,0 +1,25 @@
+# SQLite Runtime Database
+/data/howtocook.db
+/data/howtocook.db-wal
+/data/howtocook.db-shm
+
+# Cloned recipe repository data
+/data/repo/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Recipe images
+/public/recipe-images/*
+!/public/recipe-images/.gitkeep

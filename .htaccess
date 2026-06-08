@@ -1,0 +1,15 @@
+# .htaccess for HowToCookViewer PHP Edition
+# Place this file in the root directory (outside the public/ folder)
+# to automatically route all requests to the public/ folder.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent infinite loop: if the request is already in public/, do nothing
+    RewriteRule ^public/ - [L]
+
+    # Rewrite all other requests to the public/ folder
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
